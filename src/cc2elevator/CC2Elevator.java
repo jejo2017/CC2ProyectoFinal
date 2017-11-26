@@ -15,7 +15,9 @@ public class CC2Elevator extends javax.swing.JFrame {
      * Creates new form CC2Elevator
      */
     public CC2Elevator() {
+        
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
