@@ -10,8 +10,8 @@ package cc2elevator.ElevatorManager;
  * @author ejuarez
  */
 public interface Manager {
-    public void pushUp();
-    public void pushDown();
-    public void setTimeSettings(long stopTime,long moveTime);
+    public void pushUp(int level);
+    public void pushDown(int level);
+    public void setTimeSettings(long stopTime,long moveTime,int level,int qtelevator);
     
 }
