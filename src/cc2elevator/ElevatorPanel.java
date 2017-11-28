@@ -11,8 +11,16 @@ import javax.swing.DefaultListModel;
  *
  * @author ejuarez
  */
-public class ElevatorPanel extends javax.swing.JPanel {
+public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
     int levels;
+    
+    int atributo=40;
+    Thread hilo;
+    long timesl=10;
+    int ID;
+    int direccion=-1;
+    int cantpeticion=3;
+    
     DefaultListModel listModel = new DefaultListModel();
     /**
      * Creates new form ElevatorPanel
@@ -30,6 +38,57 @@ public class ElevatorPanel extends javax.swing.JPanel {
 
         
     }
+    
+    
+
+
+   
+    
+    public void start(){
+     if(hilo==null){
+        hilo=new Thread(this);
+        hilo.start();
+     }
+    }
+     @Override
+    public void run() {
+         while (true) {
+        try{
+            Thread.sleep(timesl);
+            atributo--;
+            this.jTextField1.setText(String.valueOf(atributo));
+            if (atributo==10){
+                
+            }
+            //System.out.println("ELEVADOR "+ID+" atributo "+atributo);
+            
+        }catch (InterruptedException e) { }
+       //tareas a realizar...
+    }
+    }
+     public void stop(){
+       hilo=null;
+  }
+     public int getAtributo(){
+         return atributo;
+     }
+     public void setTime(long t){
+         timesl=t;
+     }
+     public void setID(int i){
+         ID=i;
+     }
+     public int getDireccion(){
+         return direccion;
+     }
+     public int getCantPet(){
+         return cantpeticion;
+     }
+    
+    
+    
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
