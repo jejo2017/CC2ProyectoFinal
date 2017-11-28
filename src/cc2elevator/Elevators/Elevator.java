@@ -11,7 +11,7 @@ package cc2elevator.Elevators;
  */
 public interface Elevator {
     public void pushUp(int level);
-    public void pushDown(int level);
+    public void pushDown(int level);  
     public void setTime(long stopt,long movet);
     public int getID();
     public void setID(int ident);

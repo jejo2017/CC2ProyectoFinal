@@ -5,6 +5,10 @@
  */
 package cc2elevator.Elevators;
 
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import javax.swing.DefaultListModel;
 
 /**
@@ -16,15 +20,22 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
     
     //cantidad de niveles del elevador
     int levels;
+    ArrayList<Integer> selectedind = new ArrayList<Integer>();
     
     
     Thread hilo;
-    long timesl;
+    
+    
+    
+    long movetime;
+    long stoptime;
     int ID;
     int direccion;
+    int Actual;
     int cantpeticion;
     
-    int atributo=40;
+    Queue<Integer> colaPeticion=new LinkedList();
+//    int atributo=40;
     
     DefaultListModel listModel = new DefaultListModel();
     /**
@@ -42,7 +53,13 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
         }
         this.jList1.setModel(listModel);
         jList1.setSelectedIndex(0);
-
+        
+        this.jTextField1.setText(String.valueOf(ID));
+        this.jTextField3.setText(String.valueOf(Actual+1));
+        this.jTextField2.setText(String.valueOf(direccion));
+        selectedind.add(Actual);
+        
+        
         
     }
     
@@ -51,19 +68,80 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
      if(hilo==null){
         hilo=new Thread(this);
         hilo.start();
+        
      }
     }
      @Override
     public void run() {
          while (true) {
         try{
+            
+            if (colaPeticion.isEmpty()){
+                Thread.sleep(10000);
+            }else{
+                int pisoobjetivo=colaPeticion.peek();
+                this.jLabel4.setEnabled(false);
+                        this.jTextField4.setEnabled(false);
+                
+                if (pisoobjetivo>Actual){
+                    Thread.sleep(movetime);
+                    Actual++;
+                    direccion=1;
+                    this.jTextField3.setText(String.valueOf(Actual+1));
+                    this.jTextField2.setText(String.valueOf(direccion));
+                    selectedind.set(0, Actual);
+                    jList1.setSelectedIndices(arrayselect());
+                }else{
+                    if (pisoobjetivo<Actual){
+                        Thread.sleep(movetime);
+                        Actual--;
+                        direccion=-1;
+                        this.jTextField3.setText(String.valueOf(Actual+1));
+                        this.jTextField2.setText(String.valueOf(direccion));
+                        selectedind.set(0, Actual);
+                        jList1.setSelectedIndices(arrayselect());
+                    }else{
+                        this.jLabel4.setEnabled(true);
+                        this.jTextField4.setEnabled(true);
+                        Thread.sleep(stoptime);
+                        Actual=pisoobjetivo;
+                        for (int p=0;p<selectedind.size();p++){
+                            if (selectedind.get(p)==Actual){
+                                selectedind.remove(p);
+                                 jList1.setSelectedIndices(arrayselect());
+                                 
+                            }
+                        }
+                        
+                        
+                        direccion=0;
+                        colaPeticion.remove();
+                        
+                        
+                        this.jTextField3.setText(String.valueOf(Actual+1));
+                        this.jTextField2.setText(String.valueOf(direccion));
+                        
+                        
+                        
+                        //agregando nueva peticion.
+                        
+                        
+                        
+                        if (!(this.jTextField4.getText()==null) && (!this.jTextField4.getText().equals(""))){
+                            colaPeticion.add(Integer.parseInt(this.jTextField4.getText()));
+                        }
+                    }
+                }
+            }
             //ESTO ES PARA EL MOVIMIENTO AQUI DEBERIAN IR LOS MOVIMIENTOS*************************************************
+            /*
             Thread.sleep(timesl);
             atributo--;
             this.jTextField1.setText(String.valueOf(atributo));
             if (atributo==10){
                 
             }
+            */
             //ESTO ES PARA EL MOVIMIENTO AQUI DEBERIAN IR LOS MOVIMIENTOS*************************************************
             
             
@@ -75,7 +153,13 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
        hilo=null;
   }
      
-    
+    public int[] arrayselect(){
+        int[] intArray = new int[selectedind.size()];
+        for (int i = 0; i < intArray.length; i++) {
+            intArray[i] = selectedind.get(i);
+        }
+        return intArray;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -96,6 +180,8 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
 
         jTextField1.setEditable(false);
 
@@ -117,6 +203,11 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
 
         jScrollPane2.setViewportView(jList1);
 
+        jLabel4.setText("Piso al que desea ir:");
+        jLabel4.setEnabled(false);
+
+        jTextField4.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,25 +215,25 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(50, 50, 50)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(68, 68, 68)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(127, 127, 127)))
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)))
+                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(68, 68, 68)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                            .addComponent(jTextField4))))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -163,10 +254,14 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(38, 38, 38)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane2)))
@@ -180,6 +275,7 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JList<Integer> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -187,62 +283,79 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void pushUp(int level) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        colaPeticion.add(level);
+        selectedind.add(level);
+        
+        jList1.setSelectedIndices(arrayselect());
+        
     }
 
     @Override
     public void pushDown(int level) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        colaPeticion.add(level);
+        selectedind.add(level);
+        
+        jList1.setSelectedIndices(arrayselect());
     }
 
     @Override
     public int getID() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ID;
     }
 
 
     @Override
     public int getPisoActual() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Actual;
     }
 
 
     @Override
     public int Reset() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        while (!colaPeticion.isEmpty()){
+               colaPeticion.remove();
+        }
+        colaPeticion.add(0);        
+        return 0;
+
     }
 
     @Override
     public int getCantidadPeticionesCola() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return colaPeticion.size();
     }
 
     @Override
     public int getDireccion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return direccion;
     }
 
     @Override
     public void setTime(long stopt, long movet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        stoptime=stopt;
+        movetime=movet;
+        System.out.println("tiempo de parada"+stoptime);
+        System.out.println("tiempo de movimiento"+movetime);
     }
 
     @Override
     public void setID(int ident) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       ID=ident;
     }
 
     @Override
     public void setDireccion(int dir) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        direccion=dir;
     }
 
     @Override
     public void setPisoActual(int pact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Actual=pact;
     }
 }

@@ -7,6 +7,8 @@ package cc2elevator;
 
 import cc2elevator.Elevators.ElevatorPanel;
 import static java.lang.Math.abs;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 /**
  *
@@ -223,6 +225,7 @@ public class ElevatorManager extends javax.swing.JFrame {
         }else{
             //agrega el comando de detenerse en nivel para que ingresen personas
             //poolElevator[val].addComand
+            elevp[val].pushUp(level);
         }
         
     }
@@ -269,6 +272,14 @@ public class ElevatorManager extends javax.swing.JFrame {
             
         }
         
+        if (val<0){
+            System.out.println("NO SE ENCUENTRA ELEVADOR PARA DICHA ACCION");
+        }else{
+            //agrega el comando de detenerse en nivel para que ingresen personas
+            //poolElevator[val].addComand
+            elevp[val].pushDown(level);
+        }
+        
         
     }
 
@@ -289,8 +300,10 @@ public class ElevatorManager extends javax.swing.JFrame {
             this.jButton5.setEnabled(true);
         }
         System.out.print(init.jTextField1.getText());
-        stopt=Integer.parseInt(init.jTextField3.getText());
-        movet=Integer.parseInt(init.jTextField3.getText());
+        stopt=Long.valueOf(init.jTextField1.getText());
+        movet=Long.valueOf(init.jTextField2.getText());
+
+        
         levels=Integer.parseInt(init.jTextField3.getText());
         elevators=Integer.parseInt(init.jTextField4.getText());
     
@@ -301,9 +314,12 @@ public class ElevatorManager extends javax.swing.JFrame {
          elevp =new ElevatorPanel[elevators];
         for (int j=0;j<elevators;j++){
             elevp[j]=new ElevatorPanel();
-            elevp[j].startlevel(levels);
-            elevp[j].setTime(stopt,movet);
+            
             elevp[j].setID(j);
+            elevp[j].setDireccion(1);
+            elevp[j].setPisoActual(0);
+            elevp[j].setTime(stopt,movet);
+            elevp[j].startlevel(levels);
             elevp[j].start();
             this.jTabbedPane1.add(String.valueOf(j+1), elevp[j]);
             
@@ -325,7 +341,11 @@ public class ElevatorManager extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+         for (int j=0;j<elevators;j++){
+            elevp[j].Reset();
+            
+            
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
@@ -363,6 +383,11 @@ public class ElevatorManager extends javax.swing.JFrame {
             }
         });
     }
+    public class Log {
+
+        public Logger logger;
+        FileHandler fh;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -378,3 +403,5 @@ public class ElevatorManager extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
+
+
