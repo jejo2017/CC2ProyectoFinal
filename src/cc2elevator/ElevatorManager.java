@@ -5,25 +5,26 @@
  */
 package cc2elevator;
 
-import cc2elevator.ElevatorManager.ElevatorManager;
-import cc2elevator.Elevators.MiCallable;
+import cc2elevator.Elevators.ElevatorPanel;
+import static java.lang.Math.abs;
 
 /**
  *
  * @author ejuarez
  */
-public class CC2Elevator extends javax.swing.JFrame {
+public class ElevatorManager extends javax.swing.JFrame {
 
-    ElevatorManager manager=new ElevatorManager();
-    MiCallable pr;
     ElevatorPanel[] elevp;
     int levels;
     int elevators;
+    private long stopt;
+    private long movet;
+    
     
     /**
      * Creates new form CC2Elevator
      */
-    public CC2Elevator() {
+    public ElevatorManager() {
         
         initComponents();
         setLocationRelativeTo(null);
@@ -164,6 +165,118 @@ public class CC2Elevator extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
+    
+    
+    
+    public void pushUp(int level) {
+        
+        int nl=10000;
+        int val=-1;
+        for (int i=0;i<elevators;i++){
+            
+            System.out.println("valor absoluto"+abs(elevp[i].getPisoActual()-level));
+            
+            if (abs(elevp[i].getPisoActual()-level)<nl){
+                if (elevp[i].getPisoActual()<level){
+                    if ((elevp[i].getDireccion()==1) || (elevp[i].getDireccion()==0)){
+                        System.out.println("entra");
+                        val=i;
+                        nl=abs(elevp[i].getPisoActual()-level);
+                    }
+                }else{
+                    //cuando el elevador se encuentra arriba del nivel actual, va hacia abajo y 
+                    if ((elevp[i].getDireccion()==-1) || (elevp[i].getDireccion()==0)){
+                        System.out.println("entra");
+                        val=i;
+                        nl=abs(elevp[i].getPisoActual()-level);
+                    }
+                }
+                
+            }
+        }
+        
+        int cp=5000;
+        
+        if (val==-1){
+            for (int i=0;i<elevators;i++){
+            
+                if ((abs(elevp[i].getPisoActual()-level)+elevp[i].getCantidadPeticionesCola())<cp){
+                    System.out.println("entra");
+                    val=i;
+                    cp=(abs(elevp[i].getPisoActual()-level)+elevp[i].getCantidadPeticionesCola());
+                }
+            }
+            
+        }
+        
+        
+        
+        System.out.println("elevador mas cerca"+val);
+        System.out.println("ELEVADOR 0 " +elevp[0].getPisoActual());
+        System.out.println("ELEVADOR 1 " +elevp[1].getPisoActual());
+        System.out.println("ELEVADOR 2 " +elevp[2].getPisoActual());
+        
+        if (val<0){
+            System.out.println("NO SE ENCUENTRA ELEVADOR PARA DICHA ACCION");
+        }else{
+            //agrega el comando de detenerse en nivel para que ingresen personas
+            //poolElevator[val].addComand
+        }
+        
+    }
+    
+
+    
+    public void pushDown(int level) {
+       
+        int nl=10000;
+        int val=-1;
+        for (int i=0;i<elevators;i++){
+            
+            System.out.println("valor absoluto"+abs(elevp[i].getPisoActual()-level));
+            
+            if (abs(elevp[i].getPisoActual()-level)<nl){
+                if (elevp[i].getPisoActual()>level){
+                    if ((elevp[i].getDireccion()==-1) || (elevp[i].getDireccion()==0)){
+                        System.out.println("entra");
+                        val=i;
+                        nl=abs(elevp[i].getPisoActual()-level);
+                    }
+                }else{
+                    if ((elevp[i].getDireccion()==1) || (elevp[i].getDireccion()==0)){
+                        System.out.println("entra");
+                        val=i;
+                        nl=abs(elevp[i].getPisoActual()-level);
+                    }
+                }
+                
+            }
+        }
+        
+        int cp=5000;
+        
+        if (val==-1){
+            for (int i=0;i<elevators;i++){
+            
+                if ((abs(elevp[i].getPisoActual()-level)+elevp[i].getCantidadPeticionesCola())<cp){
+                    System.out.println("entra");
+                    val=i;
+                    cp=(abs(elevp[i].getPisoActual()-level)+elevp[i].getCantidadPeticionesCola());
+                }
+            }
+            
+        }
+        
+        
+    }
+
+
+    
+    
+    
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         initialSettings init=new initialSettings(this,true);
         init.setVisible(true);
@@ -176,15 +289,11 @@ public class CC2Elevator extends javax.swing.JFrame {
             this.jButton5.setEnabled(true);
         }
         System.out.print(init.jTextField1.getText());
+        stopt=Integer.parseInt(init.jTextField3.getText());
+        movet=Integer.parseInt(init.jTextField3.getText());
         levels=Integer.parseInt(init.jTextField3.getText());
         elevators=Integer.parseInt(init.jTextField4.getText());
-        
-        
-        manager.setTimeSettings(15000, 10000, 10, 3);
-        
-       
-        
-        
+    
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -193,7 +302,7 @@ public class CC2Elevator extends javax.swing.JFrame {
         for (int j=0;j<elevators;j++){
             elevp[j]=new ElevatorPanel();
             elevp[j].startlevel(levels);
-             elevp[j].setTime(1000+(1000*j));
+            elevp[j].setTime(stopt,movet);
             elevp[j].setID(j);
             elevp[j].start();
             this.jTabbedPane1.add(String.valueOf(j+1), elevp[j]);
@@ -207,12 +316,12 @@ public class CC2Elevator extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         
-        manager.pushUp(this.jComboBox1.getSelectedIndex());
+        this.pushUp(this.jComboBox1.getSelectedIndex());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         
-        manager.pushDown(this.jComboBox1.getSelectedIndex());
+        this.pushDown(this.jComboBox1.getSelectedIndex());
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -236,20 +345,21 @@ public class CC2Elevator extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CC2Elevator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ElevatorManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CC2Elevator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ElevatorManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CC2Elevator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ElevatorManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CC2Elevator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ElevatorManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CC2Elevator().setVisible(true);
+                new ElevatorManager().setVisible(true);
             }
         });
     }

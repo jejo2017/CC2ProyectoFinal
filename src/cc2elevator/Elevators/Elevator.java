@@ -10,11 +10,16 @@ package cc2elevator.Elevators;
  * @author ejuarez
  */
 public interface Elevator {
-
-    String addCommand();
-    int pressButtonPiso(int piso);
-    String resetElevator(int piso, String direccion);
-    int addTime(int time);
-    String log(String texto);
+    public void pushUp(int level);
+    public void pushDown(int level);
+    public void setTime(long stopt,long movet);
+    public int getID();
+    public void setID(int ident);
+    public int getDireccion();
+    public void setDireccion(int dir);
+    public int getPisoActual();
+    public void setPisoActual(int pact);
+    public int Reset();
+    public int getCantidadPeticionesCola();
     
 }

@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cc2elevator.ElevatorSimulator;
+package cc2elevator;
 
 /**
  *
  * @author ejuarez
  */
-public interface Simulator {
+public interface Manager {
+    public void pushUp(int level);
+    public void pushDown(int level);
+    public void setTimeSettings(long stopTime,long moveTime,int level,int qtelevator);
     
 }

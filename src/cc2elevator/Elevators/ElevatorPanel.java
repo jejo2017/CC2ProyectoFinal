@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cc2elevator;
+package cc2elevator.Elevators;
 
 import javax.swing.DefaultListModel;
 
@@ -11,15 +11,20 @@ import javax.swing.DefaultListModel;
  *
  * @author ejuarez
  */
-public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
+public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevator {
+    
+    
+    //cantidad de niveles del elevador
     int levels;
     
-    int atributo=40;
+    
     Thread hilo;
-    long timesl=10;
+    long timesl;
     int ID;
-    int direccion=-1;
-    int cantpeticion=3;
+    int direccion;
+    int cantpeticion;
+    
+    int atributo=40;
     
     DefaultListModel listModel = new DefaultListModel();
     /**
@@ -28,8 +33,10 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
     public ElevatorPanel() {
         initComponents();
     }
-    
+    //LLENA LA LISTA de niveles
     public void startlevel(int level){
+        
+        
         for (int j=0;j<level;j++){
            listModel.addElement(String.valueOf(j+1));
         }
@@ -39,11 +46,7 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
         
     }
     
-    
-
-
-   
-    
+ 
     public void start(){
      if(hilo==null){
         hilo=new Thread(this);
@@ -54,13 +57,15 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
     public void run() {
          while (true) {
         try{
+            //ESTO ES PARA EL MOVIMIENTO AQUI DEBERIAN IR LOS MOVIMIENTOS*************************************************
             Thread.sleep(timesl);
             atributo--;
             this.jTextField1.setText(String.valueOf(atributo));
             if (atributo==10){
                 
             }
-            //System.out.println("ELEVADOR "+ID+" atributo "+atributo);
+            //ESTO ES PARA EL MOVIMIENTO AQUI DEBERIAN IR LOS MOVIMIENTOS*************************************************
+            
             
         }catch (InterruptedException e) { }
        //tareas a realizar...
@@ -69,26 +74,7 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
      public void stop(){
        hilo=null;
   }
-     public int getAtributo(){
-         return atributo;
-     }
-     public void setTime(long t){
-         timesl=t;
-     }
-     public void setID(int i){
-         ID=i;
-     }
-     public int getDireccion(){
-         return direccion;
-     }
-     public int getCantPet(){
-         return cantpeticion;
-     }
-    
-    
-    
-    
-    
+     
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -202,4 +188,61 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void pushUp(int level) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void pushDown(int level) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getID() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
+    public int getPisoActual() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
+    public int Reset() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getCantidadPeticionesCola() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getDireccion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setTime(long stopt, long movet) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setID(int ident) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setDireccion(int dir) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setPisoActual(int pact) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
