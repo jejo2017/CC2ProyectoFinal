@@ -152,17 +152,7 @@ public class ElevatorPanel extends javax.swing.JPanel implements Runnable,Elevat
                     }
                 }
             }
-            //ESTO ES PARA EL MOVIMIENTO AQUI DEBERIAN IR LOS MOVIMIENTOS*************************************************
-            /*
-            Thread.sleep(timesl);
-            atributo--;
-            this.jTextField1.setText(String.valueOf(atributo));
-            if (atributo==10){
-                
-            }
-            */
-            //ESTO ES PARA EL MOVIMIENTO AQUI DEBERIAN IR LOS MOVIMIENTOS*************************************************
-            
+           
             
         }catch (InterruptedException e) { 
             System.out.println("EXCEPCION-----");
